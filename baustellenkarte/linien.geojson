@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "linien",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "id": 1, "titel": "Vollsperrung Altenhöfer Weg", "typ": "Umleitung", "status": "laufend", "von": "2026-07-01", "bis": "2026-07-31", "behoerde": "Stadt Oberursel", "quelle": "https://www.oberursel.de/de/presse-artikel/2026-07/vollsperrung-altenhoefer-weg-verlaengert/", "projekt_id": 2 }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ 8.566134186665638, 50.20587100894727 ], [ 8.565726171845572, 50.20628501295419 ], [ 8.563994596755526, 50.207195809128152 ], [ 8.565437575997231, 50.207456943286516 ], [ 8.565576898130914, 50.207546110720664 ], [ 8.568303631318685, 50.206208581715508 ] ] ] } }
+]
+}
