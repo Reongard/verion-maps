@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "flaechen",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "id": 1, "titel": "Kreuzung Lahnstraße", "typ": "Sperrung", "status": "geplant", "von": "2026-07-31", "bis": "2026-10-31", "behoerde": "BSO", "quelle": "https://www.oberursel.de/de/presse-artikel/2026-07/umbau-kreuzung-lahnstrasse-dornbachstrasse-ab-27-07/", "projekt_id": 1 }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ 8.571754342022579, 50.212305180763316 ], [ 8.57279419498432, 50.213554577680632 ], [ 8.573709740434232, 50.213242530225486 ], [ 8.572669887472491, 50.211993125137276 ], [ 8.571754342022579, 50.212305180763316 ] ] ] ] } }
+]
+}
