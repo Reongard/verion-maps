@@ -411,9 +411,19 @@
         fillColor: farbe, fillOpacity: 0.18,
         dashArray: status === 'geplant' ? '6 4' : null
       });
+    } else if (feature.geometry.type === 'MultiPolygon') {
+      const allRings = feature.geometry.coordinates.map(poly => poly[0].map(c => [c[1], c[0]]));
+      layer = L.polygon(allRings, {
+        color: farbe, weight: 2, opacity: 0.9,
+        fillColor: farbe, fillOpacity: 0.18,
+        dashArray: status === 'geplant' ? '6 4' : null
+      });
     }
 
     if (layer) {
+      // projekt_id immer als String, projekt_name fallback auf titel
+      p.projekt_id = p.projekt_id != null ? String(p.projekt_id) : null;
+      p.projekt_name = p.projekt_name || p.titel || p.projekt_id || '–';
       layer.bindPopup(popupHTML(p), { maxWidth: 280 });
       layer._statusKey = status;
       layer._projektId = p.projekt_id;
