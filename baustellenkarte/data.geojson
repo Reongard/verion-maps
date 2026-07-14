@@ -1,1 +1,194 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [8.6821, 50.1109] },
+      "properties": {
+        "id": "BS-001",
+        "titel": "Kaiserstraße – Kanalsanierung",
+        "typ": "Kanalsanierung",
+        "status": "laufend",
+        "von": "2026-06-01",
+        "bis": "2026-08-15",
+        "behoerde": "Tiefbauamt Frankfurt",
+        "beschreibung": "Erneuerung der Abwasserleitungen im Abschnitt Kaiserstraße 12–48. Halbseitige Sperrung, Einbahnregelung aktiv.",
+        "geometrie_typ": "punkt"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [8.6932, 50.1201] },
+      "properties": {
+        "id": "BS-002",
+        "titel": "Eschersheimer Landstraße – Gleisarbeiten",
+        "typ": "Gleissanierung",
+        "status": "laufend",
+        "von": "2026-05-15",
+        "bis": "2026-09-30",
+        "behoerde": "VGF Frankfurt",
+        "beschreibung": "Erneuerung der Straßenbahngleise auf 800 m Länge. Schienenersatzverkehr SEV 11/12 eingerichtet.",
+        "geometrie_typ": "punkt"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [8.6543, 50.0981] },
+      "properties": {
+        "id": "BS-003",
+        "titel": "Lyoner Straße – Brückensanierung",
+        "typ": "Brückensanierung",
+        "status": "geplant",
+        "von": "2026-09-01",
+        "bis": "2026-12-20",
+        "behoerde": "Stadtwerke Frankfurt",
+        "beschreibung": "Instandsetzung der Überführung über den Stadtring. Vollsperrung geplant, Umleitung wird ausgeschildert.",
+        "geometrie_typ": "punkt"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [8.7234, 50.1387] },
+      "properties": {
+        "id": "BS-004",
+        "titel": "Borsigallee – Wasserleitung",
+        "typ": "Wasserleitungserneuerung",
+        "status": "geplant",
+        "von": "2026-08-01",
+        "bis": "2026-10-31",
+        "behoerde": "Frankfurt Wasser",
+        "beschreibung": "Austausch veralteter Trinkwasserleitungen (DN 200). Abschnittweise Vollsperrung auf 1,2 km Länge.",
+        "geometrie_typ": "punkt"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [8.6102, 50.0876] },
+      "properties": {
+        "id": "BS-005",
+        "titel": "Gutleutstraße – Asphaltdecke",
+        "typ": "Fahrbahndeckenerneuerung",
+        "status": "abgeschlossen",
+        "von": "2026-03-10",
+        "bis": "2026-05-20",
+        "behoerde": "Tiefbauamt Frankfurt",
+        "beschreibung": "Erneuerung der Fahrbahndecke auf 600 m. Arbeiten abgeschlossen, Fahrbahn vollständig freigegeben.",
+        "geometrie_typ": "punkt"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [8.5823, 50.1876] },
+      "properties": {
+        "id": "BS-006",
+        "titel": "Oberurseler Straße B455 – Fahrbahndecke",
+        "typ": "Fahrbahndeckenerneuerung",
+        "status": "laufend",
+        "von": "2026-07-01",
+        "bis": "2026-07-31",
+        "behoerde": "Hochtaunuskreis",
+        "beschreibung": "Deckensanierung auf der B455 zwischen Oberursel und Bad Homburg. Wechselseitige Einbahnregelung.",
+        "geometrie_typ": "punkt"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [8.6187, 50.2234] },
+      "properties": {
+        "id": "BS-007",
+        "titel": "Bad Homburg – Louisenstraße Gehweg",
+        "typ": "Gehwegsanierung",
+        "status": "abgeschlossen",
+        "von": "2026-04-01",
+        "bis": "2026-06-15",
+        "behoerde": "Stadt Bad Homburg",
+        "beschreibung": "Neugestaltung der Gehwege in der Fußgängerzone. Abgeschlossen und wieder vollständig zugänglich.",
+        "geometrie_typ": "punkt"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [8.6671, 50.1532] },
+      "properties": {
+        "id": "BS-008",
+        "titel": "Friedberger Landstraße – Glasfaser",
+        "typ": "Glasfaserverlegung",
+        "status": "geplant",
+        "von": "2026-10-01",
+        "bis": "2027-02-28",
+        "behoerde": "Deutsche Telekom / Stadt Frankfurt",
+        "beschreibung": "Verlegung von Glasfaserkabeln auf 2,3 km. Abschnittweise Sperrung je Baufeld, Fußgängerführung bleibt erhalten.",
+        "geometrie_typ": "punkt"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [8.6821, 50.1109],
+          [8.6845, 50.1125],
+          [8.6872, 50.1138]
+        ]
+      },
+      "properties": {
+        "id": "SP-001",
+        "titel": "Kaiserstraße – Sperrbereich",
+        "typ": "Vollsperrung",
+        "status": "laufend",
+        "von": "2026-06-01",
+        "bis": "2026-08-15",
+        "behoerde": "Tiefbauamt Frankfurt",
+        "beschreibung": "Gesperrter Fahrbahnabschnitt Kaiserstraße 12–48.",
+        "geometrie_typ": "linie"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [8.6902, 50.1180],
+          [8.6925, 50.1210],
+          [8.6945, 50.1240],
+          [8.6960, 50.1265]
+        ]
+      },
+      "properties": {
+        "id": "SP-002",
+        "titel": "Eschersheimer Landstraße – Gleisbereich",
+        "typ": "Teilsperrung",
+        "status": "laufend",
+        "von": "2026-05-15",
+        "bis": "2026-09-30",
+        "behoerde": "VGF Frankfurt",
+        "beschreibung": "Gesperrter Gleisabschnitt, Schienenersatzverkehr aktiv.",
+        "geometrie_typ": "linie"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [8.5810, 50.1860],
+          [8.5830, 50.1878],
+          [8.5855, 50.1895],
+          [8.5880, 50.1910]
+        ]
+      },
+      "properties": {
+        "id": "SP-003",
+        "titel": "B455 Oberursel – Sperrbereich",
+        "typ": "Wechselseitige Einbahnregelung",
+        "status": "laufend",
+        "von": "2026-07-01",
+        "bis": "2026-07-31",
+        "behoerde": "Hochtaunuskreis",
+        "beschreibung": "Wechselseitige Einbahnregelung auf 400 m, Ampelregelung aktiv.",
+        "geometrie_typ": "linie"
+      }
+    }
+  ]
+}
 
