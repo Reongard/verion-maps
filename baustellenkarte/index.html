@@ -1,1 +1,401 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baustellenkarte – Verion Maps</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:      #1a1f2e;
+    --paper:    #f5f3ef;
+    --grid:     #d8d4cc;
+    --accent:   #2d5a8e;
+    --sand:     #c9bfa8;
+    --laufend:  #e07b2a;
+    --geplant:  #2d5a8e;
+    --abgeschlossen: #4a7c4e;
+    --mono: 'DM Mono', monospace;
+    --sans: 'Inter', sans-serif;
+  }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: var(--sans);
+    color: var(--ink);
+    background: var(--paper);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── HEADER ── */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 1.5rem;
+    border-bottom: 1px solid var(--grid);
+    background: var(--paper);
+    z-index: 1000;
+    flex-shrink: 0;
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .back-link {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--sand);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+  }
+  .back-link:hover { color: var(--accent); }
+  .header-title {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .header-title span { color: var(--accent); }
+
+  /* ── TOOLBAR ── */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.5rem;
+    border-bottom: 1px solid var(--grid);
+    background: var(--paper);
+    z-index: 999;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+  }
+  .toolbar-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--sand);
+    margin-right: 0.25rem;
+  }
+
+  .filter-btn {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    border: 1px solid var(--grid);
+    background: #fff;
+    color: var(--ink);
+    padding: 0.3rem 0.75rem;
+    cursor: pointer;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: all 0.15s;
+  }
+  .filter-btn .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .filter-btn.active-laufend  { background: var(--laufend);       color: #fff; border-color: var(--laufend); }
+  .filter-btn.active-geplant  { background: var(--geplant);       color: #fff; border-color: var(--geplant); }
+  .filter-btn.active-abgeschlossen { background: var(--abgeschlossen); color: #fff; border-color: var(--abgeschlossen); }
+  .filter-btn:not([class*="active"]):hover { border-color: var(--accent); color: var(--accent); }
+
+  .count-badge {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    background: var(--grid);
+    color: var(--ink);
+    padding: 0.1rem 0.4rem;
+    border-radius: 2px;
+    margin-left: auto;
+  }
+
+  /* ── MAP ── */
+  #map {
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* ── LEAFLET OVERRIDES ── */
+  .leaflet-popup-content-wrapper {
+    border-radius: 2px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+    border: 1px solid var(--grid);
+    font-family: var(--sans);
+    max-width: 280px;
+  }
+  .leaflet-popup-tip { background: #fff; }
+
+  .popup-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+  }
+  .popup-status {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.15rem 0.45rem;
+    border-radius: 2px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .status-laufend       { background: #fef0e6; color: var(--laufend); }
+  .status-geplant       { background: #e8eef5; color: var(--geplant); }
+  .status-abgeschlossen { background: #eaf2ea; color: var(--abgeschlossen); }
+
+  .popup-title {
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--ink);
+  }
+  .popup-meta {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--sand);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.04em;
+  }
+  .popup-desc {
+    font-size: 0.8rem;
+    line-height: 1.55;
+    color: #4a5060;
+    margin-bottom: 0.6rem;
+  }
+  .popup-footer {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--sand);
+    border-top: 1px solid var(--grid);
+    padding-top: 0.5rem;
+    letter-spacing: 0.04em;
+  }
+
+  /* custom marker */
+  .marker-pin {
+    width: 28px; height: 28px;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    border: 2px solid rgba(255,255,255,0.8);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  }
+  .marker-pin.laufend       { background: var(--laufend); }
+  .marker-pin.geplant       { background: var(--geplant); }
+  .marker-pin.abgeschlossen { background: var(--abgeschlossen); }
+
+  /* legend */
+  .legend {
+    background: rgba(245,243,239,0.95);
+    border: 1px solid var(--grid);
+    padding: 0.65rem 0.85rem;
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    line-height: 1.9;
+    border-radius: 2px;
+  }
+  .legend-title {
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--sand);
+    margin-bottom: 0.35rem;
+    font-size: 0.58rem;
+  }
+  .legend-item { display: flex; align-items: center; gap: 0.5rem; }
+  .legend-dot  { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .legend-line { width: 18px; height: 3px; border-radius: 1px; flex-shrink: 0; }
+
+  @media (max-width: 600px) {
+    .toolbar { gap: 0.35rem; }
+    .filter-btn { font-size: 0.62rem; padding: 0.25rem 0.55rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <a class="back-link" href="../">← Portfolio</a>
+    <span style="color:var(--grid)">|</span>
+    <span class="header-title">Verion<span>.</span>Maps · Baustellenkarte</span>
+  </div>
+  <span style="font-family:var(--mono);font-size:0.65rem;color:var(--sand);letter-spacing:0.06em;">Demo · Frankfurt / Hochtaunuskreis</span>
+</header>
+
+<div class="toolbar">
+  <span class="toolbar-label">Filter</span>
+  <button class="filter-btn active-laufend" data-status="laufend" onclick="toggleFilter('laufend')">
+    <span class="dot" style="background:#fff"></span> Laufend
+  </button>
+  <button class="filter-btn active-geplant" data-status="geplant" onclick="toggleFilter('geplant')">
+    <span class="dot" style="background:#fff"></span> Geplant
+  </button>
+  <button class="filter-btn active-abgeschlossen" data-status="abgeschlossen" onclick="toggleFilter('abgeschlossen')">
+    <span class="dot" style="background:#fff"></span> Abgeschlossen
+  </button>
+  <span class="count-badge" id="count-badge">– Objekte</span>
+</div>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  // Karte initialisieren
+  const map = L.map('map', {
+    center: [50.148, 8.645],
+    zoom: 12,
+    zoomControl: false
+  });
+
+  L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+  // Basiskarte – CartoDB Positron (sauber, dezent)
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>',
+    maxZoom: 19
+  }).addTo(map);
+
+  // Legende
+  const legend = L.control({ position: 'bottomleft' });
+  legend.onAdd = () => {
+    const div = L.DomUtil.create('div', 'legend');
+    div.innerHTML = `
+      <div class="legend-title">Legende</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#e07b2a"></span> Laufend</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#2d5a8e"></span> Geplant</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#4a7c4e"></span> Abgeschlossen</div>
+      <div style="margin-top:0.35rem;border-top:1px solid #d8d4cc;padding-top:0.35rem;">
+        <div class="legend-item"><span class="legend-line" style="background:#e07b2a"></span> Sperrung (laufend)</div>
+        <div class="legend-item"><span class="legend-line" style="background:#2d5a8e"></span> Sperrung (geplant)</div>
+      </div>`;
+    return div;
+  };
+  legend.addTo(map);
+
+  // Farben & Status
+  const farben = {
+    laufend:        '#e07b2a',
+    geplant:        '#2d5a8e',
+    abgeschlossen:  '#4a7c4e'
+  };
+
+  // Aktive Filter
+  const aktiv = { laufend: true, geplant: true, abgeschlossen: true };
+
+  // Layer-Gruppen
+  const layerGruppen = { laufend: [], geplant: [], abgeschlossen: [] };
+
+  // Datum formatieren
+  function formatDatum(str) {
+    if (!str) return '–';
+    const d = new Date(str);
+    return d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  }
+
+  // Popup-Inhalt
+  function popupHTML(p) {
+    return `
+      <div class="popup-header">
+        <span class="popup-status status-${p.status}">${p.status}</span>
+        <span class="popup-title">${p.titel}</span>
+      </div>
+      <div class="popup-meta">${p.typ}</div>
+      <div class="popup-desc">${p.beschreibung}</div>
+      <div class="popup-footer">
+        📅 ${formatDatum(p.von)} – ${formatDatum(p.bis)}<br>
+        🏛 ${p.behoerde}
+      </div>`;
+  }
+
+  // Features laden und rendern
+  fetch('data.geojson')
+    .then(r => r.json())
+    .then(data => {
+      data.features.forEach(feature => {
+        const p = feature.properties;
+        const status = p.status;
+        const farbe = farben[status] || '#999';
+        let layer;
+
+        if (feature.geometry.type === 'Point') {
+          const icon = L.divIcon({
+            className: '',
+            html: `<div class="marker-pin ${status}"></div>`,
+            iconSize: [28, 28],
+            iconAnchor: [14, 28],
+            popupAnchor: [0, -30]
+          });
+          layer = L.marker(
+            [feature.geometry.coordinates[1], feature.geometry.coordinates[0]],
+            { icon }
+          );
+        } else if (feature.geometry.type === 'LineString') {
+          const coords = feature.geometry.coordinates.map(c => [c[1], c[0]]);
+          layer = L.polyline(coords, {
+            color: farbe,
+            weight: 5,
+            opacity: 0.85,
+            dashArray: status === 'geplant' ? '8 5' : null
+          });
+        }
+
+        if (layer) {
+          layer.bindPopup(popupHTML(p), { maxWidth: 280 });
+          layer._statusKey = status;
+          layerGruppen[status].push(layer);
+          layer.addTo(map);
+        }
+      });
+
+      updateCount();
+    });
+
+  // Filter-Logik
+  function toggleFilter(status) {
+    aktiv[status] = !aktiv[status];
+
+    layerGruppen[status].forEach(layer => {
+      if (aktiv[status]) map.addLayer(layer);
+      else map.removeLayer(layer);
+    });
+
+    // Button-Style aktualisieren
+    const btn = document.querySelector(`[data-status="${status}"]`);
+    if (aktiv[status]) {
+      btn.className = `filter-btn active-${status}`;
+    } else {
+      btn.className = 'filter-btn';
+    }
+
+    updateCount();
+  }
+
+  function updateCount() {
+    let total = 0;
+    Object.keys(aktiv).forEach(s => {
+      if (aktiv[s]) total += layerGruppen[s].length;
+    });
+    document.getElementById('count-badge').textContent = `${total} Objekte`;
+  }
+</script>
+</body>
+</html>
 
