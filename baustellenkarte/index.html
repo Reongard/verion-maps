@@ -373,7 +373,7 @@
         <span class="popup-title">${p.titel}</span>
       </div>
       <div class="popup-meta">${p.typ}</div>
-      <div class="popup-desc">${p.quelle}</div>
+      <div class="popup-desc">${p.quelle ? (p.quelle.startsWith("http") ? `<a href="${p.quelle}" target="_blank" style="color:var(--accent);font-size:0.78rem;word-break:break-all;">Meldung ansehen ↗</a>` : p.quelle) : ""}</div>
       <div class="popup-footer">
         📅 ${formatDatum(p.von)} – ${formatDatum(p.bis)}<br>
         🏛 ${p.behoerde}
