@@ -481,7 +481,8 @@
       el.classList.toggle('aktiv', el.dataset.projektId === projektId);
     });
 
-    // Layer dimmen/highlighten
+    // Layer dimmen/highlighten + Bounds für Zoom sammeln
+    const projektBounds = L.latLngBounds();
     alleLayers.forEach(layer => {
       const istProjekt = layer._projektId === projektId;
       const el = layer.getElement ? layer.getElement() : null;
@@ -490,7 +491,17 @@
       } else if (layer.setStyle) {
         layer.setStyle({ opacity: istProjekt ? 0.9 : 0.08, fillOpacity: istProjekt ? 0.18 : 0.03 });
       }
+      // Bounds des Projekt-Layers einsammeln
+      if (istProjekt) {
+        if (layer.getLatLng) projektBounds.extend(layer.getLatLng());
+        else if (layer.getBounds) projektBounds.extend(layer.getBounds());
+      }
     });
+
+    // Zoom to Projekt
+    if (projektBounds.isValid()) {
+      map.fitBounds(projektBounds, { padding: [60, 60], maxZoom: 17 });
+    }
 
     document.getElementById('reset-btn').classList.add('sichtbar');
   }
