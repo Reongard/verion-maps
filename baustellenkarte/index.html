@@ -19,11 +19,12 @@
     --laufend:  #e07b2a;
     --geplant:  #2d5a8e;
     --abgeschlossen: #4a7c4e;
+    --sidebar-w: 280px;
     --mono: 'DM Mono', monospace;
     --sans: 'Inter', sans-serif;
   }
 
-  html, body { height: 100%; }
+  html, body { height: 100%; overflow: hidden; }
 
   body {
     font-family: var(--sans);
@@ -44,11 +45,7 @@
     z-index: 1000;
     flex-shrink: 0;
   }
-  .header-left {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
+  .header-left { display: flex; align-items: center; gap: 1rem; }
   .back-link {
     font-family: var(--mono);
     font-size: 0.72rem;
@@ -87,7 +84,6 @@
     color: var(--sand);
     margin-right: 0.25rem;
   }
-
   .filter-btn {
     font-family: var(--mono);
     font-size: 0.68rem;
@@ -103,16 +99,11 @@
     gap: 0.4rem;
     transition: all 0.15s;
   }
-  .filter-btn .dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .filter-btn.active-laufend  { background: var(--laufend);       color: #fff; border-color: var(--laufend); }
-  .filter-btn.active-geplant  { background: var(--geplant);       color: #fff; border-color: var(--geplant); }
+  .filter-btn .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .filter-btn.active-laufend       { background: var(--laufend);       color: #fff; border-color: var(--laufend); }
+  .filter-btn.active-geplant       { background: var(--geplant);       color: #fff; border-color: var(--geplant); }
   .filter-btn.active-abgeschlossen { background: var(--abgeschlossen); color: #fff; border-color: var(--abgeschlossen); }
   .filter-btn:not([class*="active"]):hover { border-color: var(--accent); color: var(--accent); }
-
   .count-badge {
     font-family: var(--mono);
     font-size: 0.6rem;
@@ -123,11 +114,100 @@
     margin-left: auto;
   }
 
-  /* ── MAP ── */
-  #map {
+  /* ── MAIN AREA ── */
+  .main {
+    display: flex;
     flex: 1;
     min-height: 0;
   }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: var(--sidebar-w);
+    flex-shrink: 0;
+    border-right: 1px solid var(--grid);
+    background: var(--paper);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .sidebar-header {
+    padding: 0.85rem 1rem 0.65rem;
+    border-bottom: 1px solid var(--grid);
+    flex-shrink: 0;
+  }
+  .sidebar-title {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--sand);
+  }
+  .sidebar-hint {
+    font-size: 0.72rem;
+    color: var(--sand);
+    margin-top: 0.25rem;
+    line-height: 1.4;
+  }
+  .projekt-list {
+    overflow-y: auto;
+    flex: 1;
+    padding: 0.5rem 0;
+  }
+  .projekt-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .projekt-item:hover { background: var(--accent-lt, #e8eef5); }
+  .projekt-item.aktiv {
+    background: #e8eef5;
+    border-left-color: var(--accent);
+  }
+  .projekt-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+  .projekt-info { flex: 1; min-width: 0; }
+  .projekt-name {
+    font-size: 0.8rem;
+    line-height: 1.3;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .projekt-meta {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--sand);
+    margin-top: 0.2rem;
+    letter-spacing: 0.04em;
+  }
+  .reset-btn {
+    margin: 0.5rem 1rem 0.75rem;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    border: 1px solid var(--grid);
+    background: none;
+    color: var(--sand);
+    padding: 0.3rem 0.6rem;
+    cursor: pointer;
+    border-radius: 2px;
+    width: calc(100% - 2rem);
+    transition: all 0.15s;
+    display: none;
+  }
+  .reset-btn.sichtbar { display: block; }
+  .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── MAP ── */
+  #map { flex: 1; min-width: 0; }
 
   /* ── LEAFLET OVERRIDES ── */
   .leaflet-popup-content-wrapper {
@@ -139,12 +219,7 @@
   }
   .leaflet-popup-tip { background: #fff; }
 
-  .popup-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-    margin-bottom: 0.6rem;
-  }
+  .popup-header { display: flex; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.6rem; }
   .popup-status {
     font-family: var(--mono);
     font-size: 0.58rem;
@@ -159,34 +234,11 @@
   .status-laufend       { background: #fef0e6; color: var(--laufend); }
   .status-geplant       { background: #e8eef5; color: var(--geplant); }
   .status-abgeschlossen { background: #eaf2ea; color: var(--abgeschlossen); }
-
-  .popup-title {
-    font-size: 0.9rem;
-    font-weight: 500;
-    line-height: 1.3;
-    color: var(--ink);
-  }
-  .popup-meta {
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    color: var(--sand);
-    margin-bottom: 0.5rem;
-    letter-spacing: 0.04em;
-  }
-  .popup-desc {
-    font-size: 0.8rem;
-    line-height: 1.55;
-    color: #4a5060;
-    margin-bottom: 0.6rem;
-  }
-  .popup-footer {
-    font-family: var(--mono);
-    font-size: 0.62rem;
-    color: var(--sand);
-    border-top: 1px solid var(--grid);
-    padding-top: 0.5rem;
-    letter-spacing: 0.04em;
-  }
+  .popup-title  { font-size: 0.9rem; font-weight: 500; line-height: 1.3; color: var(--ink); }
+  .popup-meta   { font-family: var(--mono); font-size: 0.65rem; color: var(--sand); margin-bottom: 0.5rem; letter-spacing: 0.04em; }
+  .popup-desc   { font-size: 0.8rem; line-height: 1.55; color: #4a5060; margin-bottom: 0.6rem; }
+  .popup-footer { font-family: var(--mono); font-size: 0.62rem; color: var(--sand); border-top: 1px solid var(--grid); padding-top: 0.5rem; letter-spacing: 0.04em; }
+  .popup-projekt { font-family: var(--mono); font-size: 0.6rem; color: var(--accent); margin-bottom: 0.4rem; letter-spacing: 0.06em; }
 
   /* custom marker */
   .marker-pin {
@@ -195,10 +247,14 @@
     transform: rotate(-45deg);
     border: 2px solid rgba(255,255,255,0.8);
     box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    transition: opacity 0.2s;
   }
   .marker-pin.laufend       { background: var(--laufend); }
   .marker-pin.geplant       { background: var(--geplant); }
   .marker-pin.abgeschlossen { background: var(--abgeschlossen); }
+
+  /* gedimmt wenn anderes Projekt aktiv */
+  .layer-gedimmt { opacity: 0.15; }
 
   /* legend */
   .legend {
@@ -211,19 +267,13 @@
     line-height: 1.9;
     border-radius: 2px;
   }
-  .legend-title {
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--sand);
-    margin-bottom: 0.35rem;
-    font-size: 0.58rem;
-  }
-  .legend-item { display: flex; align-items: center; gap: 0.5rem; }
-  .legend-dot  { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-  .legend-line { width: 18px; height: 3px; border-radius: 1px; flex-shrink: 0; }
+  .legend-title { font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; color: var(--sand); margin-bottom: 0.35rem; font-size: 0.58rem; }
+  .legend-item  { display: flex; align-items: center; gap: 0.5rem; }
+  .legend-dot   { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .legend-line  { width: 18px; height: 3px; border-radius: 1px; flex-shrink: 0; }
 
-  @media (max-width: 600px) {
+  @media (max-width: 640px) {
+    .sidebar { display: none; }
     .toolbar { gap: 0.35rem; }
     .filter-btn { font-size: 0.62rem; padding: 0.25rem 0.55rem; }
   }
@@ -241,7 +291,7 @@
 </header>
 
 <div class="toolbar">
-  <span class="toolbar-label">Filter</span>
+  <span class="toolbar-label">Status</span>
   <button class="filter-btn active-laufend" data-status="laufend" onclick="toggleFilter('laufend')">
     <span class="dot" style="background:#fff"></span> Laufend
   </button>
@@ -254,20 +304,26 @@
   <span class="count-badge" id="count-badge">– Objekte</span>
 </div>
 
-<div id="map"></div>
+<div class="main">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">Projekte</div>
+      <div class="sidebar-hint">Klick zum Hervorheben</div>
+    </div>
+    <div class="projekt-list" id="projekt-list"></div>
+    <button class="reset-btn" id="reset-btn" onclick="resetProjekt()">✕ Auswahl aufheben</button>
+  </div>
+
+  <div id="map"></div>
+</div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-  // Karte initialisieren
-  const map = L.map('map', {
-    center: [50.203, 8.578],
-    zoom: 14,
-    zoomControl: false
-  });
-
+  const map = L.map('map', { center: [50.203, 8.578], zoom: 14, zoomControl: false });
   L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-  // Basiskarte – CartoDB Positron (sauber, dezent)
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
     attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>',
     maxZoom: 19
@@ -285,35 +341,33 @@
       <div style="margin-top:0.35rem;border-top:1px solid #d8d4cc;padding-top:0.35rem;">
         <div class="legend-item"><span class="legend-line" style="background:#e07b2a"></span> Sperrung (laufend)</div>
         <div class="legend-item"><span class="legend-line" style="background:#2d5a8e"></span> Sperrung (geplant)</div>
-        <div class="legend-item"><span style="width:18px;height:12px;border:2px solid #e07b2a;background:rgba(224,123,42,0.18);flex-shrink:0;border-radius:1px;display:inline-block"></span> Bereich (Polygon)</div>
+        <div class="legend-item"><span style="width:18px;height:12px;border:2px solid #e07b2a;background:rgba(224,123,42,0.18);flex-shrink:0;border-radius:1px;display:inline-block"></span> Bereich</div>
       </div>`;
     return div;
   };
   legend.addTo(map);
 
-  // Farben & Status
   const farben = {
     laufend:        '#e07b2a',
     geplant:        '#2d5a8e',
     abgeschlossen:  '#4a7c4e'
   };
 
-  // Aktive Filter
   const aktiv = { laufend: true, geplant: true, abgeschlossen: true };
-
-  // Layer-Gruppen
   const layerGruppen = { laufend: [], geplant: [], abgeschlossen: [] };
 
-  // Datum formatieren
+  // Alle Layer flach gesammelt für Projekt-Highlighting
+  let alleLayers = [];
+  let aktivProjekt = null;
+
   function formatDatum(str) {
     if (!str) return '–';
-    const d = new Date(str);
-    return d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    return new Date(str).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
   }
 
-  // Popup-Inhalt
   function popupHTML(p) {
     return `
+      <div class="popup-projekt">📁 ${p.projekt_name || '–'}</div>
       <div class="popup-header">
         <span class="popup-status status-${p.status}">${p.status}</span>
         <span class="popup-title">${p.titel}</span>
@@ -326,7 +380,6 @@
       </div>`;
   }
 
-  // Feature rendern (wird für alle drei Dateien verwendet)
   function renderFeature(feature) {
     const p = feature.properties;
     const status = p.status;
@@ -348,19 +401,14 @@
     } else if (feature.geometry.type === 'LineString') {
       const coords = feature.geometry.coordinates.map(c => [c[1], c[0]]);
       layer = L.polyline(coords, {
-        color: farbe,
-        weight: 5,
-        opacity: 0.85,
+        color: farbe, weight: 5, opacity: 0.85,
         dashArray: status === 'geplant' ? '8 5' : null
       });
     } else if (feature.geometry.type === 'Polygon') {
       const coords = feature.geometry.coordinates[0].map(c => [c[1], c[0]]);
       layer = L.polygon(coords, {
-        color: farbe,
-        weight: 2,
-        opacity: 0.9,
-        fillColor: farbe,
-        fillOpacity: 0.18,
+        color: farbe, weight: 2, opacity: 0.9,
+        fillColor: farbe, fillOpacity: 0.18,
         dashArray: status === 'geplant' ? '6 4' : null
       });
     }
@@ -368,12 +416,105 @@
     if (layer) {
       layer.bindPopup(popupHTML(p), { maxWidth: 280 });
       layer._statusKey = status;
+      layer._projektId = p.projekt_id;
       layerGruppen[status].push(layer);
+      alleLayers.push(layer);
       layer.addTo(map);
     }
   }
 
-  // Alle drei GeoJSON-Dateien laden (Reihenfolge: Flächen → Linien → Punkte)
+  // Projekt-Sidebar aufbauen
+  function buildSidebar(features) {
+    const projekte = {};
+    features.forEach(f => {
+      const p = f.properties;
+      if (!p.projekt_id) return;
+      if (!projekte[p.projekt_id]) {
+        projekte[p.projekt_id] = {
+          id: p.projekt_id,
+          name: p.projekt_name || p.projekt_id,
+          status: p.status,
+          von: p.von,
+          bis: p.bis
+        };
+      }
+    });
+
+    const list = document.getElementById('projekt-list');
+    list.innerHTML = '';
+
+    Object.values(projekte).forEach(proj => {
+      const farbe = farben[proj.status] || '#999';
+      const item = document.createElement('div');
+      item.className = 'projekt-item';
+      item.dataset.projektId = proj.id;
+      item.innerHTML = `
+        <span class="projekt-dot" style="background:${farbe}"></span>
+        <div class="projekt-info">
+          <div class="projekt-name">${proj.name}</div>
+          <div class="projekt-meta">${formatDatum(proj.von)} – ${formatDatum(proj.bis)}</div>
+        </div>`;
+      item.addEventListener('click', () => selectProjekt(proj.id));
+      list.appendChild(item);
+    });
+  }
+
+  function selectProjekt(projektId) {
+    if (aktivProjekt === projektId) {
+      resetProjekt();
+      return;
+    }
+    aktivProjekt = projektId;
+
+    // Sidebar-Item highlighten
+    document.querySelectorAll('.projekt-item').forEach(el => {
+      el.classList.toggle('aktiv', el.dataset.projektId === projektId);
+    });
+
+    // Layer dimmen/highlighten
+    alleLayers.forEach(layer => {
+      const istProjekt = layer._projektId === projektId;
+      const el = layer.getElement ? layer.getElement() : null;
+      if (el) {
+        el.classList.toggle('layer-gedimmt', !istProjekt);
+      } else if (layer.setStyle) {
+        layer.setStyle({ opacity: istProjekt ? 0.9 : 0.08, fillOpacity: istProjekt ? 0.18 : 0.03 });
+      }
+    });
+
+    document.getElementById('reset-btn').classList.add('sichtbar');
+  }
+
+  function resetProjekt() {
+    aktivProjekt = null;
+    document.querySelectorAll('.projekt-item').forEach(el => el.classList.remove('aktiv'));
+    alleLayers.forEach(layer => {
+      const el = layer.getElement ? layer.getElement() : null;
+      if (el) el.classList.remove('layer-gedimmt');
+      else if (layer.setStyle) layer.setStyle({ opacity: 0.85, fillOpacity: 0.18 });
+    });
+    document.getElementById('reset-btn').classList.remove('sichtbar');
+  }
+
+  // Status-Filter
+  function toggleFilter(status) {
+    aktiv[status] = !aktiv[status];
+    layerGruppen[status].forEach(layer => {
+      if (aktiv[status]) map.addLayer(layer);
+      else map.removeLayer(layer);
+    });
+    const btn = document.querySelector(`[data-status="${status}"]`);
+    btn.className = aktiv[status] ? `filter-btn active-${status}` : 'filter-btn';
+    updateCount();
+  }
+
+  function updateCount() {
+    let total = 0;
+    Object.keys(aktiv).forEach(s => { if (aktiv[s]) total += layerGruppen[s].length; });
+    document.getElementById('count-badge').textContent = `${total} Objekte`;
+  }
+
+  // Laden
   Promise.all([
     fetch('punkte.geojson').then(r => r.json()),
     fetch('linien.geojson').then(r => r.json()),
@@ -382,36 +523,15 @@
     flaechen.features.forEach(renderFeature);
     linien.features.forEach(renderFeature);
     punkte.features.forEach(renderFeature);
+
+    const alleFeatures = [
+      ...punkte.features,
+      ...linien.features,
+      ...flaechen.features
+    ];
+    buildSidebar(alleFeatures);
     updateCount();
   });
-
-  // Filter-Logik
-  function toggleFilter(status) {
-    aktiv[status] = !aktiv[status];
-
-    layerGruppen[status].forEach(layer => {
-      if (aktiv[status]) map.addLayer(layer);
-      else map.removeLayer(layer);
-    });
-
-    // Button-Style aktualisieren
-    const btn = document.querySelector(`[data-status="${status}"]`);
-    if (aktiv[status]) {
-      btn.className = `filter-btn active-${status}`;
-    } else {
-      btn.className = 'filter-btn';
-    }
-
-    updateCount();
-  }
-
-  function updateCount() {
-    let total = 0;
-    Object.keys(aktiv).forEach(s => {
-      if (aktiv[s]) total += layerGruppen[s].length;
-    });
-    document.getElementById('count-badge').textContent = `${total} Objekte`;
-  }
 </script>
 </body>
 </html>
