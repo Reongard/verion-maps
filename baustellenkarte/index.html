@@ -9,21 +9,21 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
   :root {
     --ink:      #1a1f2e;
     --paper:    #f5f3ef;
     --grid:     #d8d4cc;
     --accent:   #2d5a8e;
     --sand:     #c9bfa8;
-
+ 
     --sidebar-w: 280px;
     --mono: 'DM Mono', monospace;
     --sans: 'Inter', sans-serif;
   }
-
+ 
   html, body { height: 100%; overflow: hidden; }
-
+ 
   body {
     font-family: var(--sans);
     color: var(--ink);
@@ -31,7 +31,7 @@
     display: flex;
     flex-direction: column;
   }
-
+ 
   /* ── HEADER ── */
   header {
     display: flex;
@@ -61,16 +61,16 @@
     color: var(--ink);
   }
   .header-title span { color: var(--accent); }
-
-
-
+ 
+ 
+ 
   /* ── MAIN AREA ── */
   .main {
     display: flex;
     flex: 1;
     min-height: 0;
   }
-
+ 
   /* ── SIDEBAR ── */
   .sidebar {
     width: var(--sidebar-w);
@@ -155,10 +155,10 @@
   }
   .reset-btn.sichtbar { display: block; }
   .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
-
+ 
   /* ── MAP ── */
   #map { flex: 1; min-width: 0; }
-
+ 
   /* ── LEAFLET OVERRIDES ── */
   .leaflet-popup-content-wrapper {
     border-radius: 2px;
@@ -168,7 +168,7 @@
     max-width: 280px;
   }
   .leaflet-popup-tip { background: #fff; }
-
+ 
   .popup-header { display: flex; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.6rem; }
   .popup-status {
     font-family: var(--mono);
@@ -181,13 +181,13 @@
     flex-shrink: 0;
     margin-top: 2px;
   }
-
+ 
   .popup-title  { font-size: 0.9rem; font-weight: 500; line-height: 1.3; color: var(--ink); }
   .popup-meta   { font-family: var(--mono); font-size: 0.65rem; color: var(--sand); margin-bottom: 0.5rem; letter-spacing: 0.04em; }
   .popup-desc   { font-size: 0.8rem; line-height: 1.55; color: #4a5060; margin-bottom: 0.6rem; }
   .popup-footer { font-family: var(--mono); font-size: 0.62rem; color: var(--sand); border-top: 1px solid var(--grid); padding-top: 0.5rem; letter-spacing: 0.04em; }
   .popup-projekt { font-family: var(--mono); font-size: 0.6rem; color: var(--accent); margin-bottom: 0.4rem; letter-spacing: 0.06em; }
-
+ 
   /* custom marker */
   .marker-pin {
     width: 28px; height: 28px;
@@ -197,11 +197,11 @@
     box-shadow: 0 2px 6px rgba(0,0,0,0.25);
     transition: opacity 0.2s;
   }
-
-
+ 
+ 
   /* gedimmt wenn anderes Projekt aktiv */
   .layer-gedimmt { opacity: 0.15; }
-
+ 
   /* legend */
   .legend {
     background: rgba(245,243,239,0.95);
@@ -217,7 +217,7 @@
   .legend-item  { display: flex; align-items: center; gap: 0.5rem; }
   .legend-dot   { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
   .legend-line  { width: 18px; height: 3px; border-radius: 1px; flex-shrink: 0; }
-
+ 
   @media (max-width: 640px) {
     .sidebar { display: none; }
     .toolbar { gap: 0.35rem; }
@@ -226,7 +226,7 @@
 </style>
 </head>
 <body>
-
+ 
 <header>
   <div class="header-left">
     <a class="back-link" href="../">← Portfolio</a>
@@ -235,11 +235,11 @@
   </div>
   <span style="font-family:var(--mono);font-size:0.65rem;color:var(--sand);letter-spacing:0.06em;">Demo · Oberursel (Taunus)</span>
 </header>
-
-
-
+ 
+ 
+ 
 <div class="main">
-
+ 
   <!-- SIDEBAR -->
   <div class="sidebar">
     <div class="sidebar-header">
@@ -249,20 +249,20 @@
     <div class="projekt-list" id="projekt-list"></div>
     <button class="reset-btn" id="reset-btn" onclick="resetProjekt()">✕ Auswahl aufheben</button>
   </div>
-
+ 
   <div id="map"></div>
 </div>
-
+ 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
   const map = L.map('map', { center: [50.203, 8.578], zoom: 14, zoomControl: false });
   L.control.zoom({ position: 'bottomright' }).addTo(map);
-
+ 
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
     attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a>',
     maxZoom: 19
   }).addTo(map);
-
+ 
   // Legende
   const legend = L.control({ position: 'bottomleft' });
   legend.onAdd = () => {
@@ -272,14 +272,11 @@
       <div class="legend-item"><span class="legend-dot" style="background:#d63c2f"></span> Sperrung</div>
       <div class="legend-item"><span class="legend-dot" style="background:#e8c22a"></span> Umleitung</div>
       <div class="legend-item"><span class="legend-dot" style="background:#e07b2a"></span> Einschränkung</div>
-      <div style="margin-top:0.35rem;border-top:1px solid #d8d4cc;padding-top:0.35rem;">
-        <div class="legend-item"><span class="legend-line" style="background:#d63c2f"></span> Linie</div>
-        <div class="legend-item"><span style="width:18px;height:12px;border:2px solid #d63c2f;background:rgba(214,60,47,0.18);flex-shrink:0;border-radius:1px;display:inline-block"></span> Fläche</div>
-      </div>`;
+`;
     return div;
   };
   legend.addTo(map);
-
+ 
   const farben = {
     'Sperrung':      '#d63c2f',
     'Umleitung':     '#e8c22a',
@@ -294,18 +291,18 @@
     if (t.includes('einschr') || t.includes('einengung') || t.includes('behinderung')) return farben['Einschränkung'];
     return '#888888';
   }
-
-
-
+ 
+ 
+ 
   // Alle Layer flach gesammelt für Projekt-Highlighting
   let alleLayers = [];
   let aktivProjekt = null;
-
+ 
   function formatDatum(str) {
     if (!str) return '–';
     return new Date(str).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
   }
-
+ 
   function popupHTML(p) {
     return `
       <div class="popup-projekt">📁 ${p.projekt_name || '–'}</div>
@@ -320,13 +317,13 @@
         🏛 ${p.behoerde}
       </div>`;
   }
-
+ 
   function renderFeature(feature) {
     const p = feature.properties;
     const status = p.status;
     const farbe = getFarbe(p);
     let layer;
-
+ 
     if (feature.geometry.type === 'Point') {
       const icon = L.divIcon({
         className: '',
@@ -366,7 +363,7 @@
         dashArray: status === 'geplant' ? '6 4' : null
       });
     }
-
+ 
     if (layer) {
       // projekt_id immer als String, projekt_name fallback auf titel
       p.projekt_id = p.projekt_id != null ? String(p.projekt_id) : null;
@@ -377,7 +374,7 @@
       layer.addTo(map);
     }
   }
-
+ 
   // Projekt-Sidebar aufbauen
   function buildSidebar(features) {
     const projekte = {};
@@ -395,10 +392,10 @@
         };
       }
     });
-
+ 
     const list = document.getElementById('projekt-list');
     list.innerHTML = '';
-
+ 
     Object.values(projekte).forEach(proj => {
       const farbe = farben[proj.status] || '#999';
       const item = document.createElement('div');
@@ -414,57 +411,50 @@
       list.appendChild(item);
     });
   }
-
+ 
+  // Gesamt-Extent aller Layer berechnen und speichern
+  let gesamtBounds = null;
+ 
   function selectProjekt(projektId) {
     if (aktivProjekt === projektId) {
       resetProjekt();
       return;
     }
     aktivProjekt = projektId;
-
+ 
     // Sidebar-Item highlighten
     document.querySelectorAll('.projekt-item').forEach(el => {
       el.classList.toggle('aktiv', el.dataset.projektId === projektId);
     });
-
-    // Layer dimmen/highlighten + Bounds für Zoom sammeln
+ 
+    // Bounds des Projekts sammeln, kein Dimmen
     const projektBounds = L.latLngBounds();
     alleLayers.forEach(layer => {
-      const istProjekt = layer._projektId === projektId;
-      const el = layer.getElement ? layer.getElement() : null;
-      if (el) {
-        el.classList.toggle('layer-gedimmt', !istProjekt);
-      } else if (layer.setStyle) {
-        layer.setStyle({ opacity: istProjekt ? 0.9 : 0.08, fillOpacity: istProjekt ? 0.18 : 0.03 });
-      }
-      // Bounds des Projekt-Layers einsammeln
-      if (istProjekt) {
+      if (layer._projektId === projektId) {
         if (layer.getLatLng) projektBounds.extend(layer.getLatLng());
         else if (layer.getBounds) projektBounds.extend(layer.getBounds());
       }
     });
-
-    // Zoom to Projekt
+ 
     if (projektBounds.isValid()) {
       map.fitBounds(projektBounds, { padding: [60, 60], maxZoom: 17 });
     }
-
+ 
     document.getElementById('reset-btn').classList.add('sichtbar');
   }
-
+ 
   function resetProjekt() {
     aktivProjekt = null;
     document.querySelectorAll('.projekt-item').forEach(el => el.classList.remove('aktiv'));
-    alleLayers.forEach(layer => {
-      const el = layer.getElement ? layer.getElement() : null;
-      if (el) el.classList.remove('layer-gedimmt');
-      else if (layer.setStyle) layer.setStyle({ opacity: 0.85, fillOpacity: 0.18 });
-    });
     document.getElementById('reset-btn').classList.remove('sichtbar');
+    // Zurück auf Gesamt-Extent
+    if (gesamtBounds && gesamtBounds.isValid()) {
+      map.fitBounds(gesamtBounds, { padding: [40, 40] });
+    }
   }
-
-
-
+ 
+ 
+ 
   // Laden
   Promise.all([
     fetch('punkte.geojson').then(r => r.json()),
@@ -474,13 +464,20 @@
     flaechen.features.forEach(renderFeature);
     linien.features.forEach(renderFeature);
     punkte.features.forEach(renderFeature);
-
+ 
     const alleFeatures = [
       ...punkte.features,
       ...linien.features,
       ...flaechen.features
     ];
     buildSidebar(alleFeatures);
+ 
+    // Gesamt-Extent berechnen
+    gesamtBounds = L.latLngBounds();
+    alleLayers.forEach(layer => {
+      if (layer.getLatLng) gesamtBounds.extend(layer.getLatLng());
+      else if (layer.getBounds) gesamtBounds.extend(layer.getBounds());
+    });
   });
 </script>
 </body>
