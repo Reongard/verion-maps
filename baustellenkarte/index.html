@@ -326,58 +326,64 @@
       </div>`;
   }
 
-  // Features laden und rendern
-  fetch('data.geojson')
-    .then(r => r.json())
-    .then(data => {
-      data.features.forEach(feature => {
-        const p = feature.properties;
-        const status = p.status;
-        const farbe = farben[status] || '#999';
-        let layer;
+  // Feature rendern (wird für alle drei Dateien verwendet)
+  function renderFeature(feature) {
+    const p = feature.properties;
+    const status = p.status;
+    const farbe = farben[status] || '#999';
+    let layer;
 
-        if (feature.geometry.type === 'Point') {
-          const icon = L.divIcon({
-            className: '',
-            html: `<div class="marker-pin ${status}"></div>`,
-            iconSize: [28, 28],
-            iconAnchor: [14, 28],
-            popupAnchor: [0, -30]
-          });
-          layer = L.marker(
-            [feature.geometry.coordinates[1], feature.geometry.coordinates[0]],
-            { icon }
-          );
-        } else if (feature.geometry.type === 'LineString') {
-          const coords = feature.geometry.coordinates.map(c => [c[1], c[0]]);
-          layer = L.polyline(coords, {
-            color: farbe,
-            weight: 5,
-            opacity: 0.85,
-            dashArray: status === 'geplant' ? '8 5' : null
-          });
-        } else if (feature.geometry.type === 'Polygon') {
-          const coords = feature.geometry.coordinates[0].map(c => [c[1], c[0]]);
-          layer = L.polygon(coords, {
-            color: farbe,
-            weight: 2,
-            opacity: 0.9,
-            fillColor: farbe,
-            fillOpacity: 0.18,
-            dashArray: status === 'geplant' ? '6 4' : null
-          });
-        }
-
-        if (layer) {
-          layer.bindPopup(popupHTML(p), { maxWidth: 280 });
-          layer._statusKey = status;
-          layerGruppen[status].push(layer);
-          layer.addTo(map);
-        }
+    if (feature.geometry.type === 'Point') {
+      const icon = L.divIcon({
+        className: '',
+        html: `<div class="marker-pin ${status}"></div>`,
+        iconSize: [28, 28],
+        iconAnchor: [14, 28],
+        popupAnchor: [0, -30]
       });
+      layer = L.marker(
+        [feature.geometry.coordinates[1], feature.geometry.coordinates[0]],
+        { icon }
+      );
+    } else if (feature.geometry.type === 'LineString') {
+      const coords = feature.geometry.coordinates.map(c => [c[1], c[0]]);
+      layer = L.polyline(coords, {
+        color: farbe,
+        weight: 5,
+        opacity: 0.85,
+        dashArray: status === 'geplant' ? '8 5' : null
+      });
+    } else if (feature.geometry.type === 'Polygon') {
+      const coords = feature.geometry.coordinates[0].map(c => [c[1], c[0]]);
+      layer = L.polygon(coords, {
+        color: farbe,
+        weight: 2,
+        opacity: 0.9,
+        fillColor: farbe,
+        fillOpacity: 0.18,
+        dashArray: status === 'geplant' ? '6 4' : null
+      });
+    }
 
-      updateCount();
-    });
+    if (layer) {
+      layer.bindPopup(popupHTML(p), { maxWidth: 280 });
+      layer._statusKey = status;
+      layerGruppen[status].push(layer);
+      layer.addTo(map);
+    }
+  }
+
+  // Alle drei GeoJSON-Dateien laden (Reihenfolge: Flächen → Linien → Punkte)
+  Promise.all([
+    fetch('punkte.geojson').then(r => r.json()),
+    fetch('linien.geojson').then(r => r.json()),
+    fetch('flaechen.geojson').then(r => r.json())
+  ]).then(([punkte, linien, flaechen]) => {
+    flaechen.features.forEach(renderFeature);
+    linien.features.forEach(renderFeature);
+    punkte.features.forEach(renderFeature);
+    updateCount();
+  });
 
   // Filter-Logik
   function toggleFilter(status) {
